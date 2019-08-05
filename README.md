@@ -278,3 +278,185 @@ for (let i of iterable) {
   console.log(i); // 2,4,6
 }
 ```
+
+<hr>
+
+## 실행 컨텍스트
+
+`실행 컨텍스트 : 자바스크립트 코드가 실행되고 연산되는 범위를 나타내는 추상적인 개념`
+
+### 실행 컨텍스트
+
+코드가 실행되고 있는 구역, 범위에 대한 개념
+
+- Global Execution Context : 전역 컨텍스트
+- Functional Execution Context : 함수가 호출될 때마다, 해당 함수에 대한 실행 컨텍스트가 생성됨. 각각의 함수들은 자신만의 실행 컨텍스트를 가지며, 함수가 호출이 되어야 실행 컨텍스트가 만들어진다.
+
+### 실행 스택
+
+스택 : LIFO(후입선출) 자료 구조.
+
+\_맨 처음 전역 컨텍스트를 만들고 스택에 push. 다른 함수가 호출되면 해당 함수에 대한 실행 컨텍스트를 생성하고, 스택에 push <br> JS 엔진은 실행 컨텍스트가 호출의 맨 위 함수를 실행.
+
+### 실행 컨텍스트 생성 과정
+
+1. Creation Phase
+
+   - 지역 환경 내에 함수와 변수 기록
+   - 지역 환경에서 변수를 찾지 못했다면, 외부 환경에서 찾음
+   - This binding
+
+2. Execution Phase
+   - 전역 컨텍스트에서 코드가 실행되며 각각의 변수에 값 할당
+   - 함수가 실행되면 그 함수의 실행 컨텍스트 생성
+   - 함수가 값을 리턴하면 스택에서 제거됨. 전역 변수의 값 업테이트
+
+<hr>
+
+## var, let, const
+
+### var
+
+- 재선언 가능
+- 함수 스코프
+- 호이스팅 발생
+
+### let
+
+- 재선언 불가능
+- 재할당 가능
+- 블록 스코프
+
+### const
+
+- 재선언, 재할당 불가능
+- 블록 스코프
+
+> let과 const 역시 호이스팅이 발생하지만, 초기화가 실행되기 전까지 TDZ(Temporal Dead Zone)에 존재하여 접근 할 수 없음.
+
+<hr>
+
+## Hoisting & Scope
+
+### Hoisting
+
+`변수의 선언문을 유효 범위의 최상단으로 끌어올리는 행위`
+
+### Scope
+
+`유효 범위 : JS에서는 { } 블록 단위가 아닌 funtion{ } 함수 단위 Scope`<br>
+
+> 변수 선언 -> 함수 선언 -> 변수 할당
+
+## Closure
+
+`함수 밖에서 선언된 변수를 함수 내부에서 사용할 때 Closure가 생성됨`
+
+함수가 종료되어도 함수 내부에서 외부에서 생성된 변수를 계속 사용할 수 있도록 클로저가 이러한 _환경을 그대로 기억하는 공간_ 을 형성
+
+<hr>
+
+## This
+
+- 객체가 메서드를 호출할 경우, 메서드를 호출한 객체가 This
+- 일반 함수의 경우, 브라우저 상에서 window가 This
+- 이벤트가 발생한 경우, 이벤트를 발생한 객체가 This
+
+### call, apply, bind
+
+명시적 this 바인딩
+
+```javascript
+let example = function(a, b, c) {
+  console.log(Array.prototype.join.call(arguments));
+  // arguments는 유사 배열, 따라서 배열의 메소드 사용 X
+  // console.log(arguments.join()) // Uncaught TypeError
+  // so, join() 함수를 call()을 이용해 this를 변경해 사용 가능
+  return a + b + c;
+};
+
+example(1, 2, 3);
+example.call(this, 1, 2, 3); // this 변경
+example.apply(this, [1, 2, 3]); // 인자를 배열 형식으로
+example.bind(this); // this만 바꾸고 호출 X
+```
+
+<hr>
+
+# React
+
+SPA(Single Page Application)에서 사용자 인터페이스를 구성하는데 사용되는 오픈 소스 프론트엔드 JS 라이브러리
+
+### 특징
+
+- RealDOM 대신 virtualDOM을 사용
+- 서버 사이드 렌더링을 지원
+- 단방양 데이터 흐름 / 바인딩
+- UI 구성 요소 재사용 가능
+
+### 생성
+
+- Functional components
+- Class components : state, lifecycle, ref
+  - React.Component
+  - React.PureComponent
+
+<hr>
+
+## Hook
+
+기존 Class component 중심의 단점
+
+- state와 관련된 로직을 재사용하기 어려움
+- lifecycle 관련 메서드들의 복잡성
+
+### useState
+
+```javascript
+const example = () => {
+  // count 라는 이름의 state와 setState 선언, 초기값 0
+  const [count, setCount] = useState(0);
+};
+```
+
+- destructuring 을 이용해 할당
+- 하나의 컴포넌트 내에서 State Hook을 여러 개 사용 가능
+
+### useEffect
+
+```javascript
+const example = () => {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    // 기본적으로 매 렌더링 후 effect 실행
+    document.title = `clicked ${count} times`;
+
+    //Effect 해제. componentWillUnmount와 같은 기능
+    return () => {
+      document.title = `Reset`;
+    };
+  }, [count]); // count가 변경되었을 때만 effect 실행
+};
+```
+
+### useRef
+
+```javascript
+const example = () => {
+  const divEl = useRef(null);
+  console.log(divEl); // 순수 자바스크립트 객체 생성
+  console.log(divEl.current); // 자식에게 접근하는 경우 사용
+};
+```
+
+### useContext
+
+```javascript
+const ExampleContext = React.createContext()
+...
+
+const Example = () => {
+  const { state , action } = useContext(ExampleContext)
+}
+```
