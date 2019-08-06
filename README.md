@@ -58,6 +58,22 @@ server API를 통해 정보를 주고받기 위해 사용하는 Query Language
 
 <hr>
 
+## CORS
+
+전송되는 리소스의 도메인과 다른 도메인으로부터 리소스가 요청될 때, cross-origin HTTP 요청에 의해 요청됨. <br>
+보안 상의 이유로, 브라우저들은 스크립트 내에서 초기화되는 cross-origin HTTP 요청을 제한함.<br>
+이러한 요청을 허용하기 위해 도입된 것이 CORS(Cross-Origin Resource Sharing)<br>
+일반적으로 서버사이드에서 핸들링.
+
+<hr>
+
+## PWA(Progressive Web App)
+
+웹과 앱의 장점을 결합한 웹앱.<br>
+지원하는 웹 브라우저를 통해 설치 없이 접속할 수 있고, 바탕화면에 앱 아이콘을 추가할 수 있고, 푸시 알림 또한 가능함.
+
+<hr>
+
 ## DOM - 문서 객체 모델
 
 _`웹 페이지를 자바스크립트로 제어하기 위한 객체 모델`_
