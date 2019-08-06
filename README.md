@@ -705,3 +705,291 @@ export default observer(App);
 ## Redux와 Context API
 
 context API가 `전역 상태 관리`를 Redux에 비해 조금 더 쉽고 간단하게 가능하도록 제공하는 것은 맞으나, Redux의 장점은 그 이상임. `다양한 미들웨어, 협업 환경에서의 훌륭함, 강력한 개발자 도구` 등.
+
+# 자료구조
+
+## `스택`
+
+`한쪽 끝에서만 자료를 넣고 뺄 수 있는 LIFO 형식의 자료 구조`
+
+```javascript
+class Stack {
+  constructor() {
+    this._arr = [];
+  }
+  push(item) {
+    this._arr.push(item);
+  }
+  pop() {
+    return this._arr.pop();
+  }
+  peek() {
+    return this._arr[this._arr.length - 1];
+  }
+}
+```
+
+## `큐`
+
+먼저 집어 넣은 데이터가 먼저 나오는 FIFO구조
+
+```javascript
+class Queue {
+  constructor() {
+    this._arr = [];
+  }
+  enqueue(item) {
+    this._arr.push(item);
+  }
+  dequeue() {
+    return this._arr.shift();
+  }
+}
+```
+
+## `힙`
+
+완전 이진 트리의 일종으로, 우선순위 큐를 위해 만들어진 자료 구조<br>
+`우선순위 큐` : 데이터들이 우선순위를 가지고 있고, 우선순위가 높은 데이터가 먼저 나감.<br>
+`완전 이전 트리` : 트리의 모든 높이에서 노드가 꽉 찬 형태, 왼쪽에서 오른쪽으로 꽉차야 함.
+
+### 삽입
+
+1. 힙의 마지막 노드에 삽입
+2. 새로운 노드를 부모의 노드와 비교, 교환하여 힙의 성질 만족
+
+### 삭제
+
+1. 최대 힙에서 최댓값은 루트 노드이므로 루트 노드 삭제
+2. 힙의 마지막 노드를 루트 노드로 가져옴
+3. 루트 노드와 자식 노드를 비교하여 힙의 성질 만족
+
+## `트리`
+
+여러 데이터가 계층 구조 안에서 서로 연결된 형태. 그래프의 한 종류. '최소 연결 트리'
+
+- 노드 : 트리 안에 들어있는 각 항목
+- 자식 노드
+- 부모 노드
+- 뿌리 노드 : 가장 상층부의 노드
+- 잎 노드 : 자식 노드가 없는 노드
+
+```javascript
+class Node {
+  constructor(content, children = []) {
+    this.content = content;
+    this.children = children;
+  }
+}
+
+const tree = new Node('hello', [
+  new Node('world'),
+  new Node('and'),
+  new Node('fun', [new Node('javascript!')]),
+]);
+```
+
+## 그래프
+
+단순히 노드와 그 노드를 연결하는 간선을 하나로 모아 놓은 자료 구조 <br>
+
+트리와의 차이
+
+- 무방향 그래프 존재
+- 사이클, 자체 순환 가능
+- 루트 노드, 부모-자식 개념 X
+
+<hr >
+
+## 그래프 탐색
+
+하나의 정점으로부터 시작하여 차례대로 모든 정점들을 한 번씩 방문하는 것
+
+### 깊이 우선 탐색(DFS)
+
+루트 노드에서 시작해서 다음 분기로 넘어가기 전까지 해당 분기를 완벽하게 탐색하는 방법<br>
+모든 노드를 방문하고자 하는 경우에 선택. 검색 속도는 BFS에 비해 느림
+<br>
+`스택을 이용하여 방문한 정점들을 스택에 저장하였다가 다시 꺼내어 작업`
+
+### 너비 우선 탐색(BFS)
+
+루트 노드에서 시작해서 인접한 노드를 먼저 탐색하는 방법<br>
+두 노드 사이의 최단 경로 혹은 임의의 경로를 찾고 싶을 때 선택.<br>
+`깊이가 1인 노드들을 전부 방문하고, 방문한 노드를 큐에 삽입. -> 큐에서 꺼낸 노드를 방문 -> 인접한 노드들을 모두 방문하고 큐에 삽입`
+
+# 알고리즘
+
+## 선택정렬
+
+첫 번째 자료를 두 번째 자료부터 마지막 자료까지 차례대로 비교하여 가장 작은 값을 찾아 처음에 놓는 작업을 반복하여 정렬하는 방법<br>
+시간복잡도 O(n^2)
+
+```javascript
+const selectionSort = array => {
+  let result = [...array];
+
+  for (let i = 0; i < result.length - 1; i++) {
+    let minIndex = i;
+
+    for (let j = i + 1; j < result.length; j++) {
+      if (result[minIndex] > result[j]) {
+        minIndex = j;
+      }
+    }
+
+    if (minIndex !== i) {
+      let temp = result[minIndex];
+      result[minIndex] = result[i];
+      result[i] = temp;
+    }
+  }
+  return result;
+};
+```
+
+## 삽입정렬
+
+두번째 자료부터 시작하여 앞의 자료들과 비교하여 삽입할 위치를 지정한 뒤 자료를 뒤로 옮기고 지정한 자리에 삽입하여 정렬
+
+```javascript
+const insertionSort = arr => {
+  let result = [...arr];
+
+  for (let i = 1; i < result.length; i++) {
+    let temp = result[i]; // 현재값 저장
+    let target = i - 1; // 정렬된 부분의 현재 인덱스
+
+    // 좌측 값이 현재 값보다 클 때 swap
+    while (target >= 0 && result[target] > temp) {
+      result[target + 1] = result[target];
+      target--;
+    }
+
+    // 임시로 저장한 현재값을 정렬된 부분의 인덱스에 부여
+    result[target + 1] = temp;
+  }
+
+  return result;
+};
+```
+
+## 버블정렬
+
+서로 인접한 두 원소를 검사하여 정렬하는 알고리즘
+
+```javascript
+const bubbleSort = array => {
+  let result = [...array];
+
+  for (i = 0; i < result.length - 1; i++) {
+    for (j = 0; j < result.length - 1 - i; j++) {
+      if (result[j] > result[j + 1]) {
+        let temp = result[j];
+        result[j] = result[j + 1];
+        result[j + 1] = temp;
+      }
+    }
+  }
+  return result;
+};
+```
+
+## 합병정렬(Merge Sort)
+
+리스트를 두 개의 균등한 크기로 분할하고 분할된 부분 리스트를 정렬한 다음, 정렬된 부분 리스트를 합하여 전체가 정렬된 리스트가 되도록 하는 방법
+
+```javascript
+const mergeSort = array => {
+  if (array.length <= 1) {
+    return array;
+  }
+
+  const middle = Math.floor(array.length / 2);
+  const left = array.slice(0, middle);
+  const right = array.slice(middle);
+
+  return merge(mergeSort(left), mergeSort(right));
+};
+
+const merge = (left, right) => {
+  let result = [];
+  while (left.length && right.length) {
+    left[0] > right[0] ? result.push(right.shift()) : result.push(left.shift());
+  }
+  while (left.length) {
+    result.push(left.shift());
+  }
+  while (right.length) {
+    result.push(right.shift());
+  }
+
+  return result;
+};
+```
+
+## 퀵정렬
+
+```javascript
+const quickSort = array => {
+  if (!array.length) {
+    return [];
+  }
+
+  let pivot = array[0];
+  let left = [],
+    right = [];
+
+  for (let i = 1; i < array.length; i++) {
+    array[i] < pivot ? left.push(array[i]) : right.push(array[i]);
+  }
+  return [...quickSort(left), pivot, ...quickSort(right)];
+};
+```
+
+## 힙정렬
+
+```javascript
+const swap = (array, index_A, index_B) => {
+  let temp = array[index_A];
+
+  array[index_A] = array[index_B];
+  array[index_B] = temp;
+};
+
+const heapify = (array, index, len) => {
+  let left = 2 * index + 1;
+  let right = 2 * index + 2;
+  let max = index;
+  // let len = array.length;
+
+  if (left < len && array[left] > array[max]) {
+    max = left;
+  }
+  if (right < len && array[right] > array[max]) {
+    max = right;
+  }
+
+  if (max !== index) {
+    swap(array, index, max);
+    heapify(array, max, len);
+  }
+};
+
+const heapSort = array => {
+  let len = array.length;
+
+  for (let i = Math.floor(len / 2); i >= 0; i--) {
+    heapify(array, i, len);
+  }
+  console.log(array);
+
+  for (let i = len - 1; i > 0; i--) {
+    swap(array, 0, i);
+    len--;
+
+    heapify(array, 0, len);
+  }
+  return result;
+};
+```
