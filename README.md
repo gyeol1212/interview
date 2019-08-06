@@ -982,7 +982,6 @@ const heapSort = array => {
   for (let i = Math.floor(len / 2); i >= 0; i--) {
     heapify(array, i, len);
   }
-  console.log(array);
 
   for (let i = len - 1; i > 0; i--) {
     swap(array, 0, i);
@@ -990,6 +989,7 @@ const heapSort = array => {
 
     heapify(array, 0, len);
   }
-  return result;
+
+  return array;
 };
 ```
