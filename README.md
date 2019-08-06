@@ -14,6 +14,50 @@ _`한번에 배치, 그리기가 아니라 나머지 내용을 기다리는 동�
 
 <hr >
 
+## RESTful & GraphQL
+
+### RESTful
+
+Resource 들을 하나의 Endpoint에 연결해두고, 각 Endpoint는 그 Resource와 관련된 내용만 관리하는 방법론
+
+- POST
+- GET
+- PATCH
+- DELETE
+
+### GraphQL
+
+Graph Query Language<br>
+server API를 통해 정보를 주고받기 위해 사용하는 Query Language
+
+- 하나의 EndPoint를 사용
+- 요청할 때 사용한 Query 문에 따라 응답의 구조가 달라짐
+- 사용자가 응답의 구조를 자신이 원하는 방식으로 바꿀 수 있음
+
+장점
+
+- HTTP 요청의 횟수를 줄일 수 있음 : 원하는 정보를 하나의 Query 에 담아서 요청할 수 있음
+- 응답의 Size를 줄일 수 있음 : 필요한 부분적으로 요청 가능
+
+단점
+
+- 요청의 크기가 커질 수 있음
+
+### RESTful vs GraphQL
+
+1. RESTful
+
+- HTTP와 HTTPs에 의한 caching을 사용하고 싶을 때
+- 파일 전송 등 단순한 Text로 처리되지 않는 요청이 있을 때
+- 요청의 구조가 단순하고 정해져 있을 떄
+
+2. GraphQL
+
+- 서로 다른 모양의 다양한 요청에 대해 응답할 수 있어야 할 때
+- 대부분의 요청이 CRUD에 해당할 때
+
+<hr>
+
 ## DOM - 문서 객체 모델
 
 _`웹 페이지를 자바스크립트로 제어하기 위한 객체 모델`_
@@ -460,3 +504,204 @@ const Example = () => {
   const { state , action } = useContext(ExampleContext)
 }
 ```
+
+## LifeCycle
+
+### `constructor`
+
+컴포넌트 생성자 함수. 컴포넌트가 새로 만들어질 때마다 함수가 호출됨.
+
+```javascript
+constructor(props) {
+  super(props)
+}
+```
+
+### `componentDidMount`
+
+컴포넌트가 화면에 나타났을 때 호출됨.<br> 주로 외부 라이브러리 연동, ajax 요청, DOM 속성 변경 작업 진행
+
+```javascript
+componentDidMount() {
+  // 외부 라이브러리, 컴포넌트에 필요한 요청, DOM 작업
+}
+```
+
+### `getDerivedStateFromProps`
+
+props로 받아온 값을 state로 동기화 하는 작업을 하는 경우 사용
+
+```javascript
+static getDerivedStateFromProps(nextProps, prevState) {
+  if(nextProps.value !== prevState.value){
+    return { value: nextProps.value}
+  }
+  return null
+}
+```
+
+### `shouldComponentUpdate`
+
+변화가 발생한 경우에만 render 함수를 호출하도록 할 수 있음
+
+```javascript
+shouldComponentUpdate(nextProps, nextState) {
+  // true일 경우에만 업데이트
+  return nextProps.value !== this.props.value
+}
+```
+
+### `getSnapshotBeforeUpdate`
+
+DOM의 변화가 일어나기 직전의 DOM 상태를 가져오고, 리턴하는 값은 componentDidUpdate에서 3번째 파라미터로 사용할 수 있음
+
+> render() => getSnapshotBeforeUpdate() => DOM 변화 발생 => componentDidUpdate()
+
+```javascript
+getSnapshotBeforeUpdate(prevProps, prevState) {
+  // 변화 발생 전, 스크롤 유지 등
+  ...
+  // 반환값은 CDU 에서 snapshot 값으로 받아올 수 있음
+  return { scrollTop, scrollHeight }
+}
+```
+
+### `componentDidUpdate`
+
+DOM의 변화가 일어난 후 실행
+
+```javascript
+componentDidUpdate(prevProps, prevState, snapshot) {
+  // 세번째 인자로 getSnapshotBeforeUpdate의 return 값
+}
+```
+
+### `componentWillUnmount`
+
+컴포넌트가 더 이상 필요하지 않게 되면 호출 <br>
+주로 등록했던 이벤트 제거, clearTimeout, 외부 라이브러리 종료
+
+```javascript
+componentWillUnmount() {
+
+}
+```
+
+## Redux
+
+`상태관리 라이브러리`
+
+### Ducks 패턴
+
+한 파일 내에 Actions, Reducer, Action 생성 함수 모두 작성.
+
+### 액션(Action)
+
+상태에 어떠한 변화가 필요할 때 '액션'을 발생시킴
+
+```javascript
+{
+  type: 'ADD_TODO',
+  data : {
+    id : 0,
+    text: 'adsf'
+  }
+}
+```
+
+### 액션 생성 함수
+
+액션을 생성하는 함수. 파라미터를 받아와 액션 객체로 만듦.
+
+```javascript
+function addTodo(data) {
+  return {
+    type: 'ADD_TODO',
+    payload: data,
+  };
+}
+```
+
+### 리듀서(Reducer)
+
+변화를 일으키는 함수. state와 action 두가지 파라미터를 받아옴.
+
+```javascript
+function reducer(state, action) {
+  // 상태 업데이트 로직
+  return changedState;
+}
+```
+
+여러개의 리듀서를 합치기 위해서는 `combineReducers`를 사용
+
+> RootReducer = SubReducer + SubReducer + ...
+
+### 스토어(Store)
+
+스토어 내부에는 현재의 앱 상태와 리듀서가 들어있고, 내장 함수가 있음
+
+### 디스패치(dispatch)
+
+스토어 내장 함수 중 하나. 액션을 발생시킴. dispatch라는 함수에 action을 파라미터로 전달하면 스토어는 리듀서 함수를 실행시켜 해당 액션을 처리하여 새로운 상태를 만들어 줌.
+
+### 구독(subscribe)
+
+스토어 내장 함수 중 하나. 함수 형태의 값을 파라미터로 받아, 액션이 디스패치 될 때마다 전달해준 함수가 호출된다.
+
+### mapStateToProps & mapDispatchToProps
+
+`mapStateToProps` : props로 넣어줄 스토어의 상태값
+
+```javascript
+const mapStateToProps = state => {
+  return {
+    color: state.count.color,
+  };
+};
+```
+
+`mapDispatchToProps` : props로 넣어줄 액션 생성 함수
+
+```javascript
+const mapDispatchToProps = dispatch => {
+  return {
+    changeColor: color => dispatch(changeColor(color)),
+  };
+};
+```
+
+`connect` : 컴포넌트에 리덕스 스토어 연동
+
+```javascript
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
+```
+
+### `정리`
+
+1. `Ducks 패턴으로 한 파일 내에 Actions / Reducer / Action 생성 함수 정의`
+2. `CombineReducers로 RootReducer 만들기`
+3. `Store 만들어서 전체 App에 적용하기`
+4. `Connect 함수를 사용하여 컴포넌트에 스토어 연동하기`
+
+## MobX
+
+상태 관리 라이브러리<br>
+setState조차 필요없게 됨.
+
+```javascript
+decorate(App, {
+  number: observable, // number라는 변수를 관찰
+  increase: action, // increase라는 함수를 action으로
+  decrease: action,
+});
+
+export default observer(App);
+```
+
+## Redux와 Context API
+
+context API가 `전역 상태 관리`를 Redux에 비해 조금 더 쉽고 간단하게 가능하도록 제공하는 것은 맞으나, Redux의 장점은 그 이상임. `다양한 미들웨어, 협업 환경에서의 훌륭함, 강력한 개발자 도구` 등.
