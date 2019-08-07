@@ -454,12 +454,32 @@ SPA(Single Page Application)에서 사용자 인터페이스를 구성하는데 
 - 단방양 데이터 흐름 / 바인딩
 - UI 구성 요소 재사용 가능
 
+
+### MVVM
+
+- MVC : Model + View + Controller
+    - 사용자의 Action이 Controller에 들어오고, Controller는 사용자의 Action을 확인하고 Model을 업데이트, Model을 나타낼 View를 선택. View는 모델을 이용하여 화면을 나타냄
+    - View와 Model 사이의 의존성이 높아, 어플리케이션이 커질수록 복잡해지고 유지보수가 어려워 짐.
+- MVP : Model + View + Presenter
+    - 사용자의 Acion이 뷰를 통해, View는 데이터를 Presenter에 요청. Presenter는 Model에 요청. 역순 응답.
+    - Presenter가 View와 Model을 연결하는 역할. Presenter와 View는 1:1 관계. View와 Presenter의 의존성이 강해짐.
+- MVVM : Model + View + ViewModel 
+    - 사용자의 Action들이 View를 통해 들어옴. Command 패턴으로 View Model에 Action 전달. VM이 Model에 데이터 요청, 응답. VM이 데이터 가공 저장. 데이터 바인딩을 통해 View가 표시.
+    - Command 패턴과 Data Binding 패턴을 사용하여 View와 VM 사이의 의존성을 없앰.
+    - View는 Model, VM 모두와 의존성이 없기 때문에 모듈화하여 개발 가능.
+
+### Flux
+단방향 데이터 흐름을 만들기 위한 패턴
+- Dispatcher : Flux의 데이터 흐름을 관리하는 허브. Action이 발생하면 Dispathcer로 전달되고, 전달받은 Action을 보고 콜백 함수를 실행하여 Store에 데이터 전달
+- Store : 상태 변경을 담당하는 곳. Dispatcher에 콜백 함수를 등록하면 Dispathcer로부터 수신 받음. Store가 변경되면 View에 변경되었다는 사실을 알려줌
+- View : 화면에 나타나는 것 뿐만 아니라, 자식 View로 데이터를 보내는 뷰 컨트롤러의 역할도 함께 함.
+
 ### 생성
 
 - Functional components
 - Class components : state, lifecycle, ref
   - React.Component
-  - React.PureComponent
+  - React.PureComponent : shouldComponentUpdate 가 이미 적용
 
 <hr>
 
@@ -721,6 +741,38 @@ export default observer(App);
 ## Redux와 Context API
 
 context API가 `전역 상태 관리`를 Redux에 비해 조금 더 쉽고 간단하게 가능하도록 제공하는 것은 맞으나, Redux의 장점은 그 이상임. `다양한 미들웨어, 협업 환경에서의 훌륭함, 강력한 개발자 도구` 등.
+
+
+## TypeScript
+JS + type 선언. 정적 타입 체크 <br>
+
+### 선택적 매개변수
+함수 생성시 선택적 매개변수를 만들고 싶다면 `'?'` 사용
+```typescript
+const example = (name: string, age? : number) : string {
+  return 'Hello'
+}
+```
+
+### 인터페이스
+TS에서 구조를 만들 때 사용하는 방법. interface를 통해 객체 내부 변수의 type을 지정.
+```typescript
+interface User {
+  name : string;
+  age : number;
+}
+
+const info = {
+  name : 'gyeol',
+  age : 25
+}
+
+const example = (info : User) : string => {
+  return `${info.name}님, 안녕하세요. ${info.age}이시네요.`
+}
+```
+
+<hr>
 
 # 자료구조
 
