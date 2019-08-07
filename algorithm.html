@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p id="result"></p>
+    <script>
+      let p = document.getElementById('result');
+
+      let array = [1, 4, 5, 7, 23, 4, 6, 8, 23, 5266, 27, 34, 4, 27, 12];
+
+      // swap
+      const swap = (array, a, b) => {
+        let temp = array[a];
+        array[a] = array[b];
+        array[b] = temp;
+      };
+
+      // 선택 정렬
+      const selectionSort = array => {
+        for (let i = 0; i < array.length - 1; i++) {
+          for (let j = i + 1; j < array.length; j++) {
+            if (array[i] > array[j]) {
+              swap(array, i, j);
+            }
+          }
+        }
+        return array;
+      };
+
+      // 삽입 정렬
+      const insertSort = array => {
+        for (let i = 1; i < array.length; i++) {
+          let current = array[i];
+          let target = i - 1;
+
+          while (target >= 0 && array[target] > current) {
+            array[target + 1] = array[target];
+            target--;
+          }
+          array[target + 1] = current;
+        }
+        return array;
+      };
+
+      // 버블 정렬
+      const bubbleSort = array => {
+        for (let i = 0; i < array.length - 1; i++) {
+          for (let j = 0; j < array.length - 1 - i; j++) {
+            array[j] > array[j + 1] && swap(array, j, j + 1);
+          }
+        }
+        return array;
+      };
+
+      // 합병 정렬
+      const mergeSort = array => {
+        if (array.length <= 1) return array;
+
+        const middle = Math.floor(array.length / 2);
+        const left = array.slice(0, middle);
+        const right = array.slice(middle);
+
+        return merge(mergeSort(left), mergeSort(right));
+      };
+
+      const merge = (left, right) => {
+        const result = [];
+        while (left.length && right.length) {
+          left[0] < right[0] ? result.push(left.shift()) : result.push(right.shift());
+        }
+        while (left.length) {
+          result.push(left.shift());
+        }
+        while (right.length) {
+          result.push(right.shift());
+        }
+        return result;
+      };
+
+      // 퀵 정렬
+      const quickSort = array => {
+        if (array.length <= 1) return array;
+
+        let pivot = array[0];
+        let left = [],
+          right = [];
+        for (let i = 1; i < array.length; i++) {
+          array[i] < pivot ? left.push(array[i]) : right.push(array[i]);
+        }
+
+        return [...quickSort(left), pivot, ...quickSort(right)];
+      };
+
+      // 힙 정렬
+      const root_heap = (array, index, len) => {
+        const left = index * 2 + 1;
+        const right = index * 2 + 2;
+        let max = index;
+
+        if (left < len && array[left] > array[max]) {
+          max = left;
+        }
+        if (right < len && array[right] > array[max]) {
+          max = right;
+        }
+        if (max !== index) {
+          swap(array, max, index);
+          root_heap(array, max, len);
+        }
+      };
+
+      const heapSort = array => {
+        let len = array.length;
+        for (let i = Math.floor(len / 2); i >= 0; i--) {
+          root_heap(array, i, len);
+        }
+
+        for (let i = len - 1; i > 0; i--) {
+          swap(array, i, 0);
+          len--;
+
+          root_heap(array, 0, len);
+        }
+        return array;
+      };
+
+      class Heap {
+        constructor() {
+          this._values = [];
+        }
+
+        get() {
+          return this._values;
+        }
+
+        insert(value) {
+          this._values.push(value);
+
+          let index = this._values.length - 1;
+          let parent = Math.floor(index / 2);
+
+          while (this._values[index] > this._values[parent]) {
+            swap(this._values, index, parent);
+            index = parent;
+            parent = Math.floor(index / 2);
+          }
+
+          return value;
+        }
+
+        pop() {
+          swap(this._values, 0, this._values.length - 1);
+          let result = this._values.pop();
+          root_heap(this._values, 0, this._values.length);
+          return result;
+        }
+      }
+
+      class Node {
+        constructor(content, children = []) {
+          this.content = content;
+          this.children = children;
+        }
+      }
+
+      const tree = new Node('hi', [new Node('its'), new Node('first', [new Node('node')])]);
+
+      p.innerHTML = quickSort(array);
+    </script>
+  </body>
+</html>
