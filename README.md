@@ -1,152 +1,3 @@
-# Index
-
-## 웹
-
-- 브라우저
-
-  - 브라우저의 기능
-  - 브라우저 엔진
-
-- RESTful & GraphQL
-
-  - 장/단점
-
-- CORS
-
-- PWA
-
-- DOM
-
-  - BOM
-
-- OOP(객체 지향 프로그래밍)
-
-  - 장/단점
-  - 클래스 / 인스턴스
-  - 추상화
-  - 캡슐화
-  - 상속
-  - 다형성
-  - Getter, Setter
-
-- 함수형 프로그래밍
-  - 성질, 특징
-  - 합성 함수
-
-## JavaScript
-
-- 자바스크립트 엔진
-
-  - V8
-  - 싱글쓰레드
-  - 콜스택
-  - 콜백큐(이벤트큐)
-  - 이벤트 루프
-
-- 비동기 처리
-
-  - 콜백
-  - Promise
-  - Async / await
-
-- IIFE(즉시 호출 함수 표현식)
-
-  - 함수의 선언
-  - 함수의 표현
-
-- 원시타입과 참조타입
-
-  - 원시타입
-    - 종류
-    - 특징
-  - 참조타입
-    - 종류
-    - 특징
-
-- for ... in & for ... of
-
-  - for ... in
-  - for ... of
-
-- 실행 컨텍스트
-
-  - 실행 스택
-  - 생성 과정
-
-- var, let, const
-
-- Hoistin
-- Scope
-- Closure
-- This
-  - 종류
-  - call, apply, bind
-
-## React
-
-- 특징
-- SPA
-- MVVM
-  - MVC
-  - MVP
-- Flux
-- Component 종류
-- Hook
-  - useState
-  - useEffect
-  - useContext
-  - useRef
-- LifeCycle
-
-  - constructor
-  - componentDidMount
-  - static getDerivedStateFromProps
-  - shouldComponentUpdate
-  - getSnapshotBeforeUpdate
-  - componentDidUpdate
-  - componentWillUnmount
-
-- Redux
-  - Ducks 패턴
-  - 액션
-  - 액션 생성 함수
-  - 리듀서
-  - 스토어
-  - 디스패치
-  - Subscribe
-  - mapStateToProps & mapDispatchToProps & connect
-- MobX
-  - decorate
-  - observer
-- Redux vs ContextAPI
-
-- TypeScript
-  - 선택적 매개 변수
-  - interface
-
-## 자료구조
-
-- 스택
-- 큐
-- 힙
-- 트리
-- 그래프
-
-- 깊이 우선 탐색
-- 너비 우선 탐색
-
-## 알고리즘
-
-- 선택 정렬
-- 삽입 정렬
-- 버블 정렬
-- 합병 정렬
-- 퀵 정렬
-- 힙 정렬
-
-<hr>
-<hr>
-
 # 웹
 
 ## 브라우저
@@ -174,6 +25,14 @@ Resource 들을 하나의 Endpoint에 연결해두고, 각 Endpoint는 그 Resou
 - PATCH
 - DELETE
 
+| HTTP verbs | Route      | CRUD                  |
+| :--------- | :--------- | :-------------------- |
+| `GET`      | /users     | 모든 유저의 정보      |
+| `GET`      | /users/:id | 특정 유저의 정보      |
+| `POST`     | /uses      | 새로운 유저의 생성    |
+| `PATCH`    | /users/:id | 특정 유저의 정보 수정 |
+| `DELETE`   | /users/:id | 특정 유저의 정보 삭제 |
+
 ### GraphQL
 
 Graph Query Language<br>
@@ -191,12 +50,12 @@ server API를 통해 정보를 주고받기 위해 사용하는 Query Language
 단점
 
 - 요청의 크기가 커질 수 있음
+- 사용자의 악의적인 요청으로 인한 문제 발생 가능
 
 ### RESTful vs GraphQL
 
 1. RESTful
 
-- HTTP와 HTTPs에 의한 caching을 사용하고 싶을 때
 - 파일 전송 등 단순한 Text로 처리되지 않는 요청이 있을 때
 - 요청의 구조가 단순하고 정해져 있을 떄
 
@@ -326,6 +185,11 @@ _`콜스택`_
 
 이벤트루프 : 콜스택이 비어있드면 큐에서 이벤트를 콜스택으로 보냄. 틱(tick)
 
+_`코드가 실행되면 콜스택에 Push`_<br>
+_`=> 콜스택의 함수가 Web API를 요청`_<br>
+_`=> 해당 함수는 Web API 요청이 끝나면 이벤트큐로 이동(콜스택의 함수들은 계속해서 실행 중)`_<br>
+_`=> 이벤트 루프는 콜스택이 비면, 이벤트큐의 함수를 콜스택으로 push`_
+
 <hr>
 
 ## 자바스크립트의 비동기 처리
@@ -387,6 +251,112 @@ async function 함수명() {
 
 <hr>
 
+## JS Closure
+
+### Scope
+
+- 함수 스코프
+
+  - 함수 단위에서 스코프 형성
+  - var
+
+- 블록 스코프
+  - if, for 문 등의 블록 단위에서 스코프 형성
+  - const, let
+
+#### Scope Chain
+
+상위 렉시컬 환경에 대한 _참조_
+<br>
+=> 자신을 둘러싼 부모 함수의 스코프 공유
+
+---
+
+### Closure
+
+#### Closure = 함수 + 함수를 둘러싼 환경
+
+Closure는 함수가 생성되는 시점에 그 함수의 Lexical Env를 포함하여 생성. 이후에 함수가 사용될 때, Lexical Env 또한 이용
+
+```javascript
+let color = "red";
+function foo() {
+  let color = "blue"; // 2
+  function bar() {
+    console.log(color); // 1
+  }
+  return bar;
+}
+let baz = foo(); // 3
+baz(); // 4
+```
+
+1. bar 함수는 color를 찾아 실행하는 함수
+2. bar 함수가 생성될 때, 렉시컬 환경으로 foo()의 환경을 저장 => Closure
+3. bar를 global의 baz에 할당
+4. global에서 baz 실행 => bar 실행
+5. bar의 환경 내에서 color 찾음 => 없음
+6. bar의 렉시컬 환경(foo()) 내에서 color 찾음 => 있음, blue
+7. blue 출력
+
+_bar는 자신이 생성된 스코프를 벗어나, global 환경에서 실행되었고, 실행 스택과 상관없는 foo()의 환경을 참조하였음_
+
+#### Closure의 메모리 누수
+
+Scope Chain에 의해(렉시컬 환경에 대한 참조), 사용하지 않는 함수에 의해 상위 렉시컬 스코프를 참조함으로써 메모리 누수 발생 가능
+
+---
+
+## JS Gabage Collection
+
+### 메모리 관리
+
+메모리의 생존 주기
+
+1. 할당 : 값의 초기화, 함수 호출을 통한 할당 등
+2. 사용
+3. 해제 : 문제 발생
+
+할당된 메모리가 더 이상 필요 없을 때 해제
+<br>
+_=> 더 이상 필요 없을때를 알아내기가 어려움_
+
+C와 같은 언어에서는 개발자가 직접 결정하고 해제
+
+JS의 경우 _가비지 콜렉션(Gabage Collection)_ 이라는 자동 메모리 관리법을 사용
+
+---
+
+### Gabage Collection
+
+더 이상 필요하지 않은 메모리를 판단하여 해제하는 자동화 프로그램
+
+GC 알고리즘의 핵심 개념은 _참조_
+
+A라는 메모리를 통해 B에 접근 가능하다면 "B는 A에 참조된다"
+
+#### Mark and Sweep
+
+닿을 수 없는 오브젝트 = 더 이상 필요없는 오브젝트
+
+roots 오브젝트 집합( 전역 변수 )으로 부터 참조하는 오브젝트를 단계적으로 참조하여 '닿을 수 있는 오브젝트'로 판단하고, 닿을 수 없는 오브젝트에 대해 GC를 실행.
+
+순환 참조 문제 해결
+
+---
+
+### JavaScript의 Gabage Collection
+
+흔한 자바스크립트의 메모리 누수
+
+1. 전역 변수
+
+2. DOM 요소 이중 참조
+
+3. Closure
+
+---
+
 ## IIFE(즉시 호출 함수 표현식)
 
 함수의 선언 : 자바스크립트의 실행 컨텍스트에 로딩되어 있으므로 언제든 호출 가능.
@@ -395,7 +365,7 @@ async function 함수명() {
 
 ```javascript
 let a = (function() {
-  return 'IIFE!!';
+  return "IIFE!!";
 })()(
   // a == 'IIFE!!'
 
@@ -403,7 +373,7 @@ let a = (function() {
 )(); // ()로 둘러싸서
 
 let user = (function() {
-  let name = 'gyeol';
+  let name = "gyeol";
 
   return {
     get: function() {
@@ -411,7 +381,7 @@ let user = (function() {
     },
     set: function(newName) {
       name = newName;
-    },
+    }
   };
 })();
 ```
@@ -430,7 +400,7 @@ let user = (function() {
 `모든 원시 타입은 리터럴 형식이 있다.`
 
 ```javascript
-let name = 'gyeol';
+let name = "gyeol";
 let age = 25;
 let happy = true;
 let money = null;
@@ -441,9 +411,9 @@ let house = undefined;
 (메모리 참조가 아닌 값의 복사)
 
 ```javascript
-let color1 = 'red';
+let color1 = "red";
 let color2 = color1;
-color1 = 'blue';
+color1 = "blue";
 console.log(color2); // 'red'
 ```
 
@@ -477,7 +447,7 @@ console.log(y.count); // 2
 
 ```javascript
 let iterable = [2, 4, 6];
-iterable.a = 'hello';
+iterable.a = "hello";
 
 for (let i in iterable) {
   console.log(i); // 0,1,2,"a"
@@ -505,7 +475,7 @@ for (let i of iterable) {
 
 스택 : LIFO(후입선출) 자료 구조.
 
-\_맨 처음 전역 컨텍스트를 만들고 스택에 push. 다른 함수가 호출되면 해당 함수에 대한 실행 컨텍스트를 생성하고, 스택에 push <br> JS 엔진은 실행 컨텍스트가 호출의 맨 위 함수를 실행.
+맨 처음 전역 컨텍스트를 만들고 스택에 push. 다른 함수가 호출되면 해당 함수에 대한 실행 컨텍스트를 생성하고, 스택에 push <br> JS 엔진은 실행 컨텍스트가 호출의 맨 위 함수를 실행.
 
 ### 실행 컨텍스트 생성 과정
 
@@ -591,6 +561,32 @@ example.bind(this); // this만 바꾸고 호출 X
 ```
 
 <hr>
+
+## Event
+
+### Event Bubbling
+
+특정 화면 요소에서 이벤트가 발생했을 때 해당 이벤트가 더 상위의 화면 요소들로 전달되어 가는 특성을 의미
+
+### Event Capture
+
+이벤트 버블링과 반대 방향으로 상위 요소로부터 하위 요소로 진행되는 이벤트 전파 방식
+
+### Event Delegation
+
+하위 요소에 각각 이벤트를 붙이지 않고 상위 요소에서 하위 요소의 이벤트들을 제어하는 방식
+
+- 이벤트를 반복문 등으로 각각 붙여주게 되면, 생성 당시에 없던 요소가 추가될 경우 이벤트가 붙어있지 않음.
+- 이를 방지하기 위해, 상위 요소에 이벤트를 붙여, event bubbling을 이용하여 하위 요소에 해당 이벤트가 발생하도록 함.
+- 상위 요소의 다른 하위 요소에 대해서도 이벤트가 발생할 수 있기 때문에, event 객체를 이용해 필터링 필요.
+
+### Event Throttling
+
+마지막 함수가 호출된 후 일정 시간이 지나기 전에 다시 호출되지 않도록 하는것
+
+### Event Debouncing
+
+연이어 호출되는 함수들 중 마지막 함수(또는 제일 처음)만 호출하도록 하는 것
 
 # React
 
@@ -802,8 +798,8 @@ componentWillUnmount() {
 ```javascript
 function addTodo(data) {
   return {
-    type: 'ADD_TODO',
-    payload: data,
+    type: "ADD_TODO",
+    payload: data
   };
 }
 ```
@@ -842,7 +838,7 @@ function reducer(state, action) {
 ```javascript
 const mapStateToProps = state => {
   return {
-    color: state.count.color,
+    color: state.count.color
   };
 };
 ```
@@ -852,7 +848,7 @@ const mapStateToProps = state => {
 ```javascript
 const mapDispatchToProps = dispatch => {
   return {
-    changeColor: color => dispatch(changeColor(color)),
+    changeColor: color => dispatch(changeColor(color))
   };
 };
 ```
@@ -860,10 +856,7 @@ const mapDispatchToProps = dispatch => {
 `connect` : 컴포넌트에 리덕스 스토어 연동
 
 ```javascript
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 ```
 
 ### `정리`
@@ -882,7 +875,7 @@ setState조차 필요없게 됨.
 decorate(App, {
   number: observable, // number라는 변수를 관찰
   increase: action, // increase라는 함수를 action으로
-  decrease: action,
+  decrease: action
 });
 
 export default observer(App);
@@ -917,8 +910,8 @@ interface User {
 }
 
 const info = {
-  name: 'gyeol',
-  age: 25,
+  name: "gyeol",
+  age: 25
 };
 
 const example = (info: User): string => {
@@ -927,6 +920,18 @@ const example = (info: User): string => {
 ```
 
 <hr>
+
+# 도커
+
+컨테이너 기반의 오픈소스 가상화 플랫폼
+
+### 컨테이너
+
+기존의 os 가상화 시스템과 다르게 프로세스만을 격리시켜서 가볍고 빠름, CPU와 메모리는 딱 필요한 프로세스 만큼만 사용하게 되어 효율적
+
+### Image
+
+컨테이너 생성에 필요한 파일과 설정값을 포함하고 있는 것. 이미지만 다운받아서 실행하게 되면 컨테이너가 생성됨.
 
 # 자료구조
 
@@ -1004,10 +1009,10 @@ class Node {
   }
 }
 
-const tree = new Node('hello', [
-  new Node('world'),
-  new Node('and'),
-  new Node('fun', [new Node('javascript!')]),
+const tree = new Node("hello", [
+  new Node("world"),
+  new Node("and"),
+  new Node("fun", [new Node("javascript!")])
 ]);
 ```
 
